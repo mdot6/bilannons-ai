@@ -1,0 +1,6 @@
+@BilAnnonsAI.Api_HostAddress = http://localhost:5118
+
+GET {{BilAnnonsAI.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
