@@ -1,6 +1,7 @@
 using BilAnnonsAI.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using BilAnnonsAI.Api.Services; 
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddScoped<IAdGenerator, RuleBasedAdGenerator>();
 
 // Tillåter att vår React-app anropar API:t från en annan port.
 builder.Services.AddCors(options =>
