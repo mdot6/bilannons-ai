@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/BilAnnonsAI.Api/BilAnnonsAI.Api.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BilAnnonsAI.Tests/BilAnnonsAI.Tests.csproj" />
+  </Folder>
 </Solution>

@@ -1,5 +1,6 @@
 using BilAnnonsAI.Api.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BilAnnonsAI.Api.Data;
 
@@ -10,8 +11,19 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // SQLite lagrar inte DateTimeKind. Konverteraren märker alla tider
+        // som UTC vid inläsning, så att JSON-svaret alltid innehåller "Z".
+        var utc = new ValueConverter<DateTime, DateTime>(
+            v => v.ToUniversalTime(),
+            v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+
+        var utcNullable = new ValueConverter<DateTime?, DateTime?>(
+            v => v.HasValue ? v.Value.ToUniversalTime() : v,
+            v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v);
+        
         modelBuilder.Entity<Vehicle>(entity =>
         {
+            entity.Property(v => v.CreatedAt).HasConversion(utc);
             entity.Property(v => v.Make).HasMaxLength(60).IsRequired();
             entity.Property(v => v.Model).HasMaxLength(60).IsRequired();
             entity.Property(v => v.FuelType).HasMaxLength(30).IsRequired();
@@ -26,6 +38,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<Advertisement>(entity =>
         {
+            entity.Property(a => a.CreatedAt).HasConversion(utc);
+            entity.Property(a => a.UpdatedAt).HasConversion(utcNullable);
             entity.Property(a => a.Title).HasMaxLength(200);
 
             entity.HasOne(a => a.Vehicle)

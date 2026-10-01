@@ -3,13 +3,13 @@ using BilAnnonsAI.Api.Data;
 using BilAnnonsAI.Api.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BilAnnonsAI.Api.Services;
 
 namespace BilAnnonsAI.Api.Controllers;
 
 [ApiController]
 [Route("api/advertisements")]
-public class AdvertisementsController(AppDbContext db) : ControllerBase
-{
+public class AdvertisementsController(AppDbContext db, IAdGenerator generator) : ControllerBase{
     /// <summary>Sparar biluppgifter och skapar ett annonsutkast.</summary>
     [HttpPost]
     [ProducesResponseType(typeof(AdvertisementResponse), StatusCodes.Status201Created)]
@@ -52,4 +52,38 @@ public class AdvertisementsController(AppDbContext db) : ControllerBase
 
         return Ok(advertisement.ToResponse());
     }
+    
+    /// <summary>Genererar annonsinnehåll utifrån sparade biluppgifter.</summary>
+    [HttpPost("{id:guid}/generate")]
+    [ProducesResponseType(typeof(AdvertisementResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<AdvertisementResponse>> Generate(
+        Guid id,
+        CancellationToken cancellationToken)
+    {
+        var advertisement = await db.Advertisements
+            .Include(a => a.Vehicle)
+            .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
+
+        if (advertisement is null)
+        {
+            return NotFound();
+        }
+
+        var generated = await generator.GenerateAsync(advertisement.Vehicle, cancellationToken);
+
+        advertisement.Title = generated.Title;
+        advertisement.FullDescription = generated.FullDescription;
+        advertisement.MarketplaceDescription = generated.MarketplaceDescription;
+        advertisement.SellingPoints = generated.SellingPoints;
+        advertisement.MissingInformation = generated.MissingInformation;
+        advertisement.SalesChecklist = generated.SalesChecklist;
+        advertisement.Status = AdvertisementStatus.Generated;
+        advertisement.UpdatedAt = DateTime.UtcNow;
+
+        await db.SaveChangesAsync(cancellationToken);
+
+        return Ok(advertisement.ToResponse());
+    }
+    
 }
