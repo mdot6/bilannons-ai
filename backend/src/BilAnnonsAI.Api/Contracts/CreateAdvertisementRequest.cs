@@ -46,6 +46,7 @@ public class CreateAdvertisementRequest
     [StringLength(2000)]
     public string? KnownIssues { get; set; }
 
+    [Required(ErrorMessage = "Önskat pris måste anges.")]
     [Range(0, 10_000_000, ErrorMessage = "Pris måste vara mellan 0 och 10 000 000 kronor.")]
     public int? AskingPrice { get; set; }
 }
