@@ -11,11 +11,28 @@ public static class MappingExtensions
     /// </summary>
     private static string? Normalize(string? value)
         => string.IsNullOrWhiteSpace(value) ? null : value.Trim();
+    
+    /// <summary>
+    /// Versaliserar varje ord, så att "volvo v70" blir "Volvo V70".
+    /// Rör inte ord som redan innehåller versaler, eftersom "BMW"
+    /// och "XC90" annars skulle bli "Bmw" och "Xc90".
+    /// </summary>
+    private static string CapitalizeWords(string value)
+    {
+        var words = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        var result = words.Select(word =>
+            word.Any(char.IsUpper)
+                ? word
+                : char.ToUpperInvariant(word[0]) + word[1..]);
+
+        return string.Join(' ', result);
+    }
 
     public static Vehicle ToVehicle(this CreateAdvertisementRequest request) => new()
     {
-        Make = request.Make.Trim(),
-        Model = request.Model.Trim(),
+        Make = CapitalizeWords(request.Make.Trim()),
+        Model = CapitalizeWords(request.Model.Trim()),
         ModelYear = request.ModelYear,
         Mileage = request.Mileage,
         FuelType = request.FuelType.Trim(),

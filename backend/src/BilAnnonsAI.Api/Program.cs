@@ -2,7 +2,7 @@ using BilAnnonsAI.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using BilAnnonsAI.Api.Services; 
-
+using BilAnnonsAI.Api.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 const string FrontendCorsPolicy = "FrontendPolicy";
@@ -16,6 +16,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddScoped<IAdGenerator, RuleBasedAdGenerator>();
+builder.Services.AddExceptionHandler<ExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 
 // Tillåter att vår React-app anropar API:t från en annan port.
 builder.Services.AddCors(options =>
@@ -29,6 +32,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
 
 // Dokumentationsgränssnittet ska bara vara tillgängligt lokalt.
 if (app.Environment.IsDevelopment())
