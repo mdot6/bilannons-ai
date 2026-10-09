@@ -6,6 +6,7 @@ namespace BilAnnonsAI.Api.Controllers;
 [Route("api/[controller]")]
 public class HealthController : ControllerBase
 {
+ 
     [HttpGet]
     public IActionResult Get()
     {
