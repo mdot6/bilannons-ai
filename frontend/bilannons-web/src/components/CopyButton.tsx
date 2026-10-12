@@ -22,8 +22,8 @@ export function CopyButton({ text, label = 'Kopiera' }: Props) {
         <button
             type="button"
             onClick={handleCopy}
-            className="rounded-md border border-slate-300 bg-white px-3 py-1.5
-                 text-sm font-medium text-slate-700 hover:bg-slate-100"
+            className="rounded-sm border border-rule px-3 py-1 text-sm font-medium
+                 text-plate hover:border-plate hover:bg-paper"
         >
             {copied ? 'Kopierat' : label}
         </button>

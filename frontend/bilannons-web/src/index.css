@@ -1,5 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap');
 @import "tailwindcss";
 
-:root {
-    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+@theme {
+    --color-ink: #0E2338;
+    --color-ink-soft: #1C3A58;
+    --color-plate: #1A4FA0;
+    --color-paper: #F3F5F8;
+    --color-rule: #D8DFE8;
+    --color-muted: #5B6B7F;
+
+    --color-note-bg: #FBF6EC;
+    --color-note-rule: #E6D6B4;
+    --color-note-ink: #6B4E16;
+
+    --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+    --font-serif: "Source Serif 4", Georgia, serif;
+
+    --radius-sm: 4px;
+}
+
+body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Synlig fokusmarkering för tangentbordsnavigering. */
+:focus-visible {
+    outline: 2px solid var(--color-plate);
+    outline-offset: 2px;
 }
