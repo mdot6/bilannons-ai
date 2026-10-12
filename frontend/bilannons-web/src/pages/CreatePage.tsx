@@ -34,7 +34,7 @@ export function CreatePage() {
     const [isSubmitting, setIsSubmitting] = useState(false)
 
     function handleChange(name: string, value: string) {
-        setForm((previous) => ({ ...previous, [name]: value }))
+        setForm((previous) => ({...previous, [name]: value}))
     }
 
     /** Backend namnger fält med versal, formuläret med gemen. */
@@ -84,7 +84,7 @@ export function CreatePage() {
         } catch (error) {
             if (error instanceof ApiValidationError) {
                 setErrors(error.errors)
-                window.scrollTo({ top: 0, behavior: 'smooth' })
+                window.scrollTo({top: 0, behavior: 'smooth'})
             } else {
                 setGeneralError(
                     error instanceof Error ? error.message : 'Något gick fel.'
@@ -98,30 +98,34 @@ export function CreatePage() {
     const hasErrors = Object.keys(errors).length > 0
 
     return (
-        <div className="mx-auto max-w-2xl px-4 py-10">
-            <h1 className="text-3xl font-bold text-slate-900">Uppgifter om bilen</h1>
-            <p className="mt-2 text-slate-600">
-                Fält märkta med stjärna är obligatoriska. Allt du lämnar tomt
-                utelämnas ur annonsen i stället för att gissas.
+        <div className="mx-auto max-w-2xl px-5 py-12">
+            <h1 className="text-3xl font-bold tracking-tight text-ink">
+                Uppgifter om bilen
+            </h1>
+            <p className="mt-3 max-w-[60ch] leading-relaxed text-muted">
+                Fält med stjärna är obligatoriska. Resten fyller du i om du kan –
+                det du hoppar över nämns inte i annonsen.
             </p>
 
             {hasErrors && (
-                <div className="mt-6 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-800">
+                <div className="mt-6 rounded-sm border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
                     Några uppgifter behöver rättas. Se markeringarna nedan.
                 </div>
             )}
 
             {generalError && (
-                <div className="mt-6 rounded-md border border-red-300 bg-red-50 p-4 text-sm text-red-800">
+                <div className="mt-6 rounded-sm border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
                     {generalError}
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="mt-8 space-y-6" noValidate>
-                <section className="space-y-4">
-                    <h2 className="text-lg font-semibold text-slate-800">Grunduppgifter</h2>
+            <form onSubmit={handleSubmit} className="mt-10 space-y-10" noValidate>
+                <fieldset className="rounded-sm border border-rule bg-white p-6">
+                    <legend className="px-2 text-sm font-semibold text-muted">
+                        Grunduppgifter
+                    </legend>
 
-                    <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="grid gap-5 sm:grid-cols-2">
                         <TextField
                             label="Märke" name="make" required
                             value={form.make} onChange={handleChange}
@@ -158,7 +162,7 @@ export function CreatePage() {
                             label="Registreringsnummer" name="registrationNumber"
                             value={form.registrationNumber} onChange={handleChange}
                             errors={errorsFor('registrationNumber')} placeholder="ABC123"
-                            hint="Används inte i annonsen, bara för din egen överblick"
+                            hint="Syns inte i annonsen"
                         />
                         <TextField
                             label="Färg" name="color"
@@ -166,54 +170,58 @@ export function CreatePage() {
                             errors={errorsFor('color')} placeholder="Mörkblå"
                         />
                     </div>
-                </section>
+                </fieldset>
 
-                <section className="space-y-4">
-                    <h2 className="text-lg font-semibold text-slate-800">Skick och historik</h2>
+                <fieldset className="rounded-sm border border-rule bg-white p-6">
+                    <legend className="px-2 text-sm font-semibold text-muted">
+                        Skick och historik
+                    </legend>
 
-                    <TextAreaField
-                        label="Utrustning" name="equipment"
-                        value={form.equipment} onChange={handleChange}
-                        errors={errorsFor('equipment')}
-                        placeholder="Dragkrok, farthållare, vinterdäck på fälg"
-                        hint="Separera med komma. De tre första blir försäljningsargument."
-                    />
+                    <div className="space-y-5">
+                        <TextAreaField
+                            label="Utrustning" name="equipment"
+                            value={form.equipment} onChange={handleChange}
+                            errors={errorsFor('equipment')}
+                            placeholder="Dragkrok, farthållare, vinterdäck på fälg"
+                            hint="Separera med komma. De tre första lyfts fram som försäljningsargument."
+                        />
 
-                    <TextAreaField
-                        label="Servicehistorik" name="serviceHistory"
-                        value={form.serviceHistory} onChange={handleChange}
-                        errors={errorsFor('serviceHistory')}
-                        placeholder="Servad enligt schema hos märkesverkstad"
-                    />
+                        <TextAreaField
+                            label="Servicehistorik" name="serviceHistory"
+                            value={form.serviceHistory} onChange={handleChange}
+                            errors={errorsFor('serviceHistory')}
+                            placeholder="Servad enligt schema hos märkesverkstad"
+                        />
 
-                    <TextAreaField
-                        label="Bilens skick" name="condition"
-                        value={form.condition} onChange={handleChange}
-                        errors={errorsFor('condition')}
-                        placeholder="Gott skick, mindre stenskott i vindrutan"
-                    />
+                        <TextAreaField
+                            label="Bilens skick" name="condition"
+                            value={form.condition} onChange={handleChange}
+                            errors={errorsFor('condition')}
+                            placeholder="Gott skick, mindre stenskott i vindrutan"
+                        />
 
-                    <TextAreaField
-                        label="Kända fel och skador" name="knownIssues"
-                        value={form.knownIssues} onChange={handleChange}
-                        errors={errorsFor('knownIssues')}
-                        placeholder="Vänster bakljus behöver bytas"
-                        hint="Var ärlig här. Köpare upptäcker fel ändå, och en annons som nämner dem väcker förtroende."
-                    />
+                        <TextAreaField
+                            label="Kända fel och skador" name="knownIssues"
+                            value={form.knownIssues} onChange={handleChange}
+                            errors={errorsFor('knownIssues')}
+                            placeholder="Vänster bakljus behöver bytas"
+                            hint="Köpare upptäcker fel ändå. En annons som nämner dem i förväg väcker förtroende."
+                        />
 
-                    <TextField
-                        label="Önskat pris" name="askingPrice" required type="number"
-                        value={form.askingPrice} onChange={handleChange}
-                        errors={errorsFor('askingPrice')} placeholder="89000"
-                        hint="Kronor. Annonser utan pris får betydligt färre svar."
-                    />
-                </section>
+                        <TextField
+                            label="Önskat pris" name="askingPrice" required type="number"
+                            value={form.askingPrice} onChange={handleChange}
+                            errors={errorsFor('askingPrice')} placeholder="89000"
+                            hint="Kronor"
+                        />
+                    </div>
+                </fieldset>
 
                 <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full rounded-lg bg-slate-900 px-6 py-3 font-medium text-white
-                     hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+                    className="w-full rounded-sm bg-ink px-6 py-3.5 font-medium text-white
+                     hover:bg-ink-soft disabled:cursor-not-allowed disabled:bg-muted"
                 >
                     {isSubmitting ? 'Skapar annons…' : 'Skapa annons'}
                 </button>

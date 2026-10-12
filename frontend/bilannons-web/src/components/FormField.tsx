@@ -13,10 +13,10 @@ interface FieldProps {
 }
 
 const inputClasses =
-    'mt-1 w-full rounded-md border border-slate-300 px-3 py-2 ' +
-    'focus:border-slate-900 focus:outline-none'
+    'mt-1.5 w-full rounded-sm border border-rule bg-white px-3 py-2.5 ' +
+    'text-ink placeholder:text-muted/60 focus:border-plate focus:outline-none'
 
-const errorClasses = 'border-red-500 focus:border-red-500'
+const errorClasses = 'border-red-600 focus:border-red-600'
 
 export function TextField({
                               label, name, value, onChange, errors, required, type = 'text', placeholder, hint
@@ -25,7 +25,7 @@ export function TextField({
 
     return (
         <div>
-            <label htmlFor={name} className="block text-sm font-medium text-slate-700">
+            <label htmlFor={name} className="block text-sm font-medium text-ink">
                 {label}
                 {required && <span className="text-red-600"> *</span>}
             </label>
@@ -45,7 +45,7 @@ export function TextField({
             )}
 
             {hasError && (
-                <p className="mt-1 text-sm text-red-600">{errors.join(' ')}</p>
+                <p className="mt-1.5 text-sm text-red-700">{errors.join(' ')}</p>
             )}
         </div>
     )
@@ -77,7 +77,7 @@ export function TextAreaField({
             />
 
             {hint && !hasError && (
-                <p className="mt-1 text-xs text-slate-500">{hint}</p>
+                <p className="mt-1.5 text-sm text-muted">{hint}</p>
             )}
 
             {hasError && (
